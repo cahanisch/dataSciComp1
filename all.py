@@ -31,7 +31,8 @@ test_y = testing.loc[:,['label']]
 def tree():
     print("--------------------------------")
     print("Decision Tree")
-    model = DecisionTreeClassifier(max_depth=9000) # idk what to put for max depth, it doesn't get any better with higher nums
+    # Just chose an arbitrarily high depth
+    model = DecisionTreeClassifier(max_depth=9000)
     model.max_iter = 20000
     model.fit(train_x, train_y.values.ravel())
 
@@ -40,12 +41,12 @@ def tree():
     print("Train: %s" % model.score(train_x, train_y.values.ravel()))
     predictions = model.predict(test_x)
 
-    # Test out the model on the testing data
+    # Confusion Matrix testing data
     print("\nCM - Testing Model")
     cm = metrics.confusion_matrix(test_y, predictions)
     print(cm)
 
-    # Test out the model on the training data
+    # Confusion Matrix training data
     trainpred = model.predict(train_x)
     tcm = metrics.confusion_matrix(train_y, trainpred)
     print("\nCM - Training Model")
@@ -68,12 +69,12 @@ def KNN():
     print("Train: %s" % model.score(train_x, train_y.values.ravel()))
     predictions = model.predict(test_x)
 
-    # Test out the model on the testing data
+    # Confusion Matrix testing data
     print("\nCM - Testing Model")
     cm = metrics.confusion_matrix(test_y, predictions)
     print(cm)
 
-    # Test out the model on the training data
+    # Confusion Matrix training data
     trainpred = model.predict(train_x)
     tcm = metrics.confusion_matrix(train_y, trainpred)
     print("\nCM - Training Model")
@@ -96,12 +97,12 @@ def LR():
     print("Train: %s" % model.score(train_x, train_y.values.ravel()))
     predictions = model.predict(test_x)
 
-    # Test out the model on the testing data
+    # Confusion Matrix testing data
     print("\nCM - Testing Model")
     cm = metrics.confusion_matrix(test_y, predictions)
     print(cm)
 
-    # Test out the model on the training data
+    # Confusion Matrix training data
     trainpred = model.predict(train_x)
     tcm = metrics.confusion_matrix(train_y, trainpred)
     print("\nCM - Training Model")
@@ -131,6 +132,7 @@ def report_matrix(model, cm, atrain, tcm, atest):
         file.write("\n\n")
 
 if __name__ == "__main__":
+    # Run the models, it was done this way to make selective execution easier :)
     tree()
     KNN()
     LR()
