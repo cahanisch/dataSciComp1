@@ -23,7 +23,6 @@ test_x = testing.loc[:, ['sttl', 'dmean', 'rate', 'dwin', 'ct_src_dport_ltm', 'c
 #train_x = training.loc[:, ['sttl', 'rate', 'dur']]
 
 
-
 # These will pretty much stay the same
 train_y = training.loc[:,['label']]
 test_y = testing.loc[:,['label']]
@@ -41,8 +40,10 @@ def tree():
     print("Train: %s" % model.score(train_x, train_y.values.ravel()))
     predictions = model.predict(test_x)
 
-    # Write Preditions to CSV file
-    report_csv('Result-DecisionTree.csv', predictions)
+    # Test out the model on the testing data
+    print("\nCM - Testing Model")
+    cm = metrics.confusion_matrix(test_y, predictions)
+    print(cm)
 
     # Test out the model on the training data
     trainpred = model.predict(train_x)
@@ -50,10 +51,10 @@ def tree():
     print("\nCM - Training Model")
     print(tcm)
 
-    # Test out the model on the testing data
-    print("\nCM - Testing Model")
-    cm = metrics.confusion_matrix(test_y, predictions)
-    print(cm)
+    # Do report writing
+    # Write Preditions to CSV file
+    report_csv('Result-DecisionTree.csv', predictions)
+    report_matrix('Decision Tree', cm, model.score(train_x, train_y.values.ravel()), tcm, model.score(test_x, test_y.values.ravel()))
 
 def KNN():
     print("\n--------------------------------")
@@ -67,8 +68,10 @@ def KNN():
     print("Train: %s" % model.score(train_x, train_y.values.ravel()))
     predictions = model.predict(test_x)
 
-    # Write Preditions to CSV file
-    report_csv('Result-KNN.csv', predictions)
+    # Test out the model on the testing data
+    print("\nCM - Testing Model")
+    cm = metrics.confusion_matrix(test_y, predictions)
+    print(cm)
 
     # Test out the model on the training data
     trainpred = model.predict(train_x)
@@ -76,10 +79,10 @@ def KNN():
     print("\nCM - Training Model")
     print(tcm)
 
-    # Test out the model on the testing data
-    print("\nCM - Testing Model")
-    cm = metrics.confusion_matrix(test_y, predictions)
-    print(cm)
+    # Do report writing
+    # Write Preditions to CSV file
+    report_csv('Result-KNN.csv', predictions)
+    report_matrix('KNN', cm, model.score(train_x, train_y.values.ravel()), tcm, model.score(test_x, test_y.values.ravel()))
 
 def LR():
     print("\n--------------------------------")
@@ -93,8 +96,10 @@ def LR():
     print("Train: %s" % model.score(train_x, train_y.values.ravel()))
     predictions = model.predict(test_x)
 
-    # Write Preditions to CSV file
-    report_csv('Result-LogisticRegression.csv', predictions)
+    # Test out the model on the testing data
+    print("\nCM - Testing Model")
+    cm = metrics.confusion_matrix(test_y, predictions)
+    print(cm)
 
     # Test out the model on the training data
     trainpred = model.predict(train_x)
@@ -102,17 +107,30 @@ def LR():
     print("\nCM - Training Model")
     print(tcm)
 
-    # Test out the model on the testing data
-    print("\nCM - Testing Model")
-    cm = metrics.confusion_matrix(test_y, predictions)
-    print(cm)
+    # Do report writing
+    # Write Preditions to CSV file
+    report_csv('Result-LogisticRegression.csv', predictions)
+    report_matrix('Logistic Regression', cm, model.score(train_x, train_y.values.ravel()), tcm, model.score(test_x, test_y.values.ravel()))
 
 def report_csv(csvname, data):
-    with open(csvname, mode='w') as file:
+    with open('./reports/'+csvname, mode='w') as file:
         file_writer = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         file_writer.writerow(data)
 
+def report_matrix(model, cm, atrain, tcm, atest):
+    with open('./reports/final-report.txt', mode='a+') as file:
+        file.write("************************\n")
+        file.write(model + "\n")
+        file.write("------------------------\n")
+        file.write("Train Accuracy: %s\n" % atrain)
+        file.write(str(tcm))
+        file.write("\n\n")
+
+        file.write("Test Accuracy:  %s\n" % atest)
+        file.write(str(cm))
+        file.write("\n\n")
+
 if __name__ == "__main__":
     tree()
-    #KNN()
-    #LR()
+    KNN()
+    LR()
